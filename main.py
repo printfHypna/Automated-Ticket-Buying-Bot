@@ -95,7 +95,7 @@ while(driver.current_url != base_url):
 
 # Event search
 
-event = "fenerbahçe"
+event = "trabzonspor"
 
 wait(By.ID, "search_input")
 event_input = driver.find_element(By.ID, "search_input")
@@ -179,7 +179,7 @@ while not current_url.__contains__('koltuk-secim'):
         continue
 
 # Category Selection
-catogery_index = 12
+catogery_index = 8
 
 wait(By.XPATH,
     "(//select[@class='form-control ng-untouched ng-pristine ng-valid'])[2]")
@@ -187,63 +187,71 @@ select_catogery = Select(driver.find_element(By.XPATH,
     "(//select[@class='form-control ng-untouched ng-pristine ng-valid'])[2]"))
 
 while True:
-    select_catogery.select_by_index(catogery_index)
-    if wait_error("//button[@class='swal2-confirm swal2-styled']"):
-        try:
-            no_seat_button = driver.find_element(By.XPATH, "//button[@class='swal2-confirm swal2-styled']")
-            no_seat_button.click()
-            print("No avaliable seat for the catogery!")
-            print(datetime.now())
-            select_catogery.select_by_index(0)
-            sleep(0.2)
-        except StaleElementReferenceException:
-            continue
-        except NoSuchElementException:
-            continue
-        except WebDriverException:
-            continue
+
+    try:
+        print("TRIED")
+        select_catogery.select_by_index(catogery_index)
+            
+        # Selecting number of tickets
+
+        ticket_amount_index = 1
+
+        # sleep(1)  # Using this because "wait" isn't enough for some reason 
+        wait(By.XPATH,
+            "(//select[@class='form-control'])")
+        select_amount = Select(driver.find_element(By.XPATH,
+            "(//select[@class='form-control'])"))
+        select_amount.select_by_index(ticket_amount_index)
+
+
+        # Selecting Block 
+
+
+        # no_seat_button = driver.find_element(By.XPATH, "//button[@class='swal2-confirm swal2-styled']")
+        # no_seat_button.click()
+        # print("No avaliable seat for the catogery!")
+        # print(datetime.now())
+        # select_catogery.select_by_index(0)
+
+        wait(By.ID, "blocks", 1)
+        select_block = Select(driver.find_element(By.ID, "blocks"))
+        blocks_list = select_block.options
+        block_index = len(blocks_list)-1
+
+        while driver.current_url != "https://www.passo.com.tr/tr/sepet":
+            
+            try:
+                select_block.select_by_index(block_index)
+                block_index -= 1
+                if block_index == 0:
+                    block_index = len(blocks_list)-1
+                wait(By.ID, "best_available_button")
+                final_button = driver.find_element(By.ID, "best_available_button")
+                final_button.click()
+                if wait_error("(//button[@class='swal2-confirm swal2-styled'])"):
+                    close_button = driver.find_element(By.XPATH,
+                        "(//button[@class='swal2-confirm swal2-styled'])")
+                    close_button.click()
+                else:
+                    continue
+            except StaleElementReferenceException:
+                continue
+        
+    except StaleElementReferenceException:
+        print("1")
+        continue
+    except NoSuchElementException:
+        print("2")
+        continue
+    except WebDriverException:
+        print("3")
+        no_seat_button = driver.find_element(By.XPATH, "//button[@class='swal2-confirm swal2-styled']")
+        no_seat_button.click()
+        print("No avaliable seat for the catogery!")
+        print(datetime.now())
+        select_catogery.select_by_index(0)
+        continue
     else:
         break
-
-        
-# Selecting number of tickets
-
-ticket_amount_index = 1
-
-sleep(1)  # Using this because "wait" isn't enough for some reason 
-wait(By.XPATH,
-    "(//select[@class='form-control'])")
-select_amount = Select(driver.find_element(By.XPATH,
-    "(//select[@class='form-control'])"))
-select_amount.select_by_index(ticket_amount_index)
-
-
-# Selecting Block 
-
-ticket_block_index = 10
-
-wait(By.ID, "blocks")
-select_block = Select(driver.find_element(By.ID, "blocks"))
-blocks_list = select_block.options
-block_index = len(blocks_list)-1
-
-while driver.current_url != "https://www.passo.com.tr/tr/sepet":
-    
-    try:
-        select_block.select_by_index(block_index)
-        block_index -= 1
-        if block_index == 0:
-            block_index = len(blocks_list)-1
-        wait(By.ID, "best_available_button")
-        final_button = driver.find_element(By.ID, "best_available_button")
-        final_button.click()
-        if wait_error("(//button[@class='swal2-confirm swal2-styled'])"):
-            close_button = driver.find_element(By.XPATH,
-                "(//button[@class='swal2-confirm swal2-styled'])")
-            close_button.click()
-        else:
-            continue
-    except StaleElementReferenceException:
-        continue
-        
+            
 driver.quit()
