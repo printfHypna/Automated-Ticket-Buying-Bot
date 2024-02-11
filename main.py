@@ -180,7 +180,7 @@ select_catogery = Select(driver.find_element(By.XPATH,
 
 while True:
     select_catogery.select_by_index(catogery_index)
-    if wait_error("//button[@class='swal2-confirm swal2-styled']", 1):
+    if wait_error("//button[@class='swal2-confirm swal2-styled']"):
         try:
             no_seat_button = driver.find_element(By.XPATH, "//button[@class='swal2-confirm swal2-styled']")
             no_seat_button.click()
