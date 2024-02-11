@@ -180,7 +180,7 @@ select_catogery = Select(driver.find_element(By.XPATH,
 
 while True:
     select_catogery.select_by_index(catogery_index)
-    if wait_error("//button[@class='swal2-confirm swal2-styled']"):
+    if wait_error("//button[@class='swal2-confirm swal2-styled']", 1):
         try:
             no_seat_button = driver.find_element(By.XPATH, "//button[@class='swal2-confirm swal2-styled']")
             no_seat_button.click()
@@ -198,7 +198,10 @@ while True:
             print(333)
             continue
     else:
-        break
+        if wait_error("(//select[@id='blocks'])", 1):
+            break
+        else:
+            continue
 
         
 # Selecting number of tickets
