@@ -40,14 +40,6 @@ service = Service(executable_path=
                   "/Users/kutayozdur/Documents/PythonProjects/PassoLigTicket/chromedriver")
 driver = webdriver.Chrome(service=service)
 
-# file = open('inputs.text')
-# content = file.readlines()
-# email = content[0]
-# password = content[1]
-# event = content[2]
-# game_index = int(content[3])
-
-
 driver.get(base_url)
 
 driver.maximize_window()
@@ -95,7 +87,7 @@ while(driver.current_url != base_url):
 
 # Event search
 
-event = "fenerbahçe"
+event = "trabzonspor"
 
 wait(By.ID, "search_input")
 event_input = driver.find_element(By.ID, "search_input")
@@ -179,7 +171,7 @@ while not current_url.__contains__('koltuk-secim'):
         continue
 
 # Category Selection
-catogery_index = 12
+catogery_index = 8
 
 wait(By.XPATH,
     "(//select[@class='form-control ng-untouched ng-pristine ng-valid'])[2]")
@@ -188,7 +180,7 @@ select_catogery = Select(driver.find_element(By.XPATH,
 
 while True:
     select_catogery.select_by_index(catogery_index)
-    if wait_error("//button[@class='swal2-confirm swal2-styled']"):
+    if wait_error("//button[@class='swal2-confirm swal2-styled']", 1):
         try:
             no_seat_button = driver.find_element(By.XPATH, "//button[@class='swal2-confirm swal2-styled']")
             no_seat_button.click()
@@ -197,10 +189,13 @@ while True:
             select_catogery.select_by_index(0)
             sleep(0.2)
         except StaleElementReferenceException:
+            print(111)
             continue
         except NoSuchElementException:
+            print(222)
             continue
         except WebDriverException:
+            print(333)
             continue
     else:
         break
@@ -210,7 +205,7 @@ while True:
 
 ticket_amount_index = 1
 
-sleep(1)  # Using this because "wait" isn't enough for some reason 
+# sleep(1)  # Using this because "wait" isn't enough for some reason 
 wait(By.XPATH,
     "(//select[@class='form-control'])")
 select_amount = Select(driver.find_element(By.XPATH,
@@ -219,8 +214,6 @@ select_amount.select_by_index(ticket_amount_index)
 
 
 # Selecting Block 
-
-ticket_block_index = 10
 
 wait(By.ID, "blocks")
 select_block = Select(driver.find_element(By.ID, "blocks"))
