@@ -186,7 +186,8 @@ while True:
             no_seat_button.click()
             print("No avaliable seat for the catogery!")
             print(datetime.now())
-            select_catogery.select_by_index(0)
+            select_catogery.select_by_index(7)
+            no_seat_button.click()
             sleep(0.2)
         except StaleElementReferenceException:
             print(111)
