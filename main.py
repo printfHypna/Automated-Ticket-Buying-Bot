@@ -79,7 +79,7 @@ login_inputs[0].clear()
 login_inputs[0].send_keys("kutayozdur@gmail.com")
 
 login_inputs[1].clear()
-login_inputs[1].send_keys("Kutayke54")
+login_inputs[1].send_keys("Kutay0874")
 
 # Check if we are back in main page after the login
 while(driver.current_url != base_url):
@@ -87,7 +87,7 @@ while(driver.current_url != base_url):
 
 # Event search
 
-event = "trabzonspor"
+event = "galatasaray"
 
 wait(By.ID, "search_input")
 event_input = driver.find_element(By.ID, "search_input")
@@ -96,7 +96,7 @@ event_input.send_keys(event + Keys.ENTER)
 
 # Selecting event
 
-game_index = 0
+game_index = 1
 # If the game is at the bottom, scroll down
 # if game_index > 1:
 #     for handle in driver.window_handles:
@@ -146,7 +146,7 @@ while not current_url.__contains__('koltuk-secim'):
             driver.switch_to.window(handle)
             driver.execute_script("window.scrollTo(0, 700);")
         start_time = now
-        wait(By.XPATH, "//button[@class='red-btn']", 0.5)
+        wait(By.XPATH, "//button[@class='red-btn']")
         red_button = driver.find_element(By.XPATH, "//button[@class='red-btn']")
     try:
         red_button.click()
@@ -171,7 +171,7 @@ while not current_url.__contains__('koltuk-secim'):
         continue
 
 # Category Selection
-catogery_index = 8
+catogery_index = 12
 
 wait(By.XPATH,
     "(//select[@class='form-control ng-untouched ng-pristine ng-valid'])[2]")
