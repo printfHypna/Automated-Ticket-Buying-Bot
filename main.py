@@ -171,7 +171,7 @@ while not current_url.__contains__('koltuk-secim'):
         continue
 
 # Category Selection
-catogery_index = 12
+catogery_index = 13
 
 wait(By.XPATH,
     "(//select[@class='form-control ng-untouched ng-pristine ng-valid'])[2]")
@@ -209,7 +209,7 @@ while True:
 
 ticket_amount_index = 1
 
-# sleep(1)  # Using this because "wait" isn't enough for some reason 
+sleep(1)  # Using this because "wait" isn't enough for some reason 
 wait(By.XPATH,
     "(//select[@class='form-control'])")
 select_amount = Select(driver.find_element(By.XPATH,
@@ -219,14 +219,18 @@ select_amount.select_by_index(ticket_amount_index)
 
 # Selecting Block 
 
-wait(By.ID, "blocks")
-select_block = Select(driver.find_element(By.ID, "blocks"))
-blocks_list = select_block.options
-block_index = len(blocks_list)-1
+# wait(By.ID, "blocks")
+# select_block = Select(driver.find_element(By.ID, "blocks"))
+# blocks_list = select_block.options
+# block_index = len(blocks_list)-1
 
 while driver.current_url != "https://www.passo.com.tr/tr/sepet":
     
     try:
+        wait(By.ID, "blocks")
+        select_block = Select(driver.find_element(By.ID, "blocks"))
+        blocks_list = select_block.options
+        block_index = len(blocks_list)-1
         select_block.select_by_index(block_index)
         block_index -= 1
         if block_index == 0:
@@ -241,6 +245,10 @@ while driver.current_url != "https://www.passo.com.tr/tr/sepet":
         else:
             continue
     except StaleElementReferenceException:
+        driver.refresh()
+        continue
+    except ElementClickInterceptedException:
+        driver.refresh()
         continue
         
 driver.quit()
