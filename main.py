@@ -13,7 +13,7 @@ from selenium.common.exceptions import ElementNotInteractableException
 from selenium.common.exceptions import WebDriverException
 from time import sleep
 from datetime import datetime
-
+from login_info import login
 
 def wait(by, text, time=5):
     WebDriverWait(driver, time).until(
@@ -72,14 +72,17 @@ link.click()
 
 # Login 
 
+username = login.get('EMAIL')
+password = login.get('PASSWORD')
+
 wait(By.CLASS_NAME, "quick-input")
 login_inputs = driver.find_elements(By.CLASS_NAME, "quick-input")
 
 login_inputs[0].clear()
-login_inputs[0].send_keys("kutayozdur@gmail.com")
+login_inputs[0].send_keys(username)
 
 login_inputs[1].clear()
-login_inputs[1].send_keys("Kutay0874")
+login_inputs[1].send_keys(password)
 
 # Check if we are back in main page after the login
 while(driver.current_url != base_url):
@@ -178,6 +181,7 @@ wait(By.XPATH,
 select_catogery = Select(driver.find_element(By.XPATH,
     "(//select[@class='form-control ng-untouched ng-pristine ng-valid'])[2]"))
 
+
 while True:
     select_catogery.select_by_index(catogery_index)
     if wait_error("//button[@class='swal2-confirm swal2-styled']", 1):
@@ -219,18 +223,14 @@ select_amount.select_by_index(ticket_amount_index)
 
 # Selecting Block 
 
-# wait(By.ID, "blocks")
-# select_block = Select(driver.find_element(By.ID, "blocks"))
-# blocks_list = select_block.options
-# block_index = len(blocks_list)-1
+wait(By.ID, "blocks")
+select_block = Select(driver.find_element(By.ID, "blocks"))
+blocks_list = select_block.options
+block_index = len(blocks_list)-1
 
 while driver.current_url != "https://www.passo.com.tr/tr/sepet":
     
     try:
-        wait(By.ID, "blocks")
-        select_block = Select(driver.find_element(By.ID, "blocks"))
-        blocks_list = select_block.options
-        block_index = len(blocks_list)-1
         select_block.select_by_index(block_index)
         block_index -= 1
         if block_index == 0:
@@ -238,17 +238,19 @@ while driver.current_url != "https://www.passo.com.tr/tr/sepet":
         wait(By.ID, "best_available_button")
         final_button = driver.find_element(By.ID, "best_available_button")
         final_button.click()
-        if wait_error("(//button[@class='swal2-confirm swal2-styled'])"):
-            close_button = driver.find_element(By.XPATH,
-                "(//button[@class='swal2-confirm swal2-styled'])")
-            close_button.click()
-        else:
-            continue
-    except StaleElementReferenceException:
+        sleep(1)
         driver.refresh()
+        # if wait_error("(//button[@class='swal2-confirm swal2-styled'])"):
+        #     close_button = driver.find_element(By.XPATH,
+        #         "(//button[@class='swal2-confirm swal2-styled'])")
+        #     close_button.click()
+        # else:
+        #     continue
+    except StaleElementReferenceException:
         continue
     except ElementClickInterceptedException:
-        driver.refresh()
+        continue
+    except TimeoutException:
         continue
         
 driver.quit()
