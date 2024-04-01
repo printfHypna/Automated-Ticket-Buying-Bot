@@ -34,10 +34,10 @@ def wait_error(xpath, time=5):
         return False
     return True
 
-base_url = ('https://www.passo.com.tr/tr')
+base_url = ('')
 
 service = Service(executable_path=
-                  "/Users/kutayozdur/Documents/PythonProjects/PassoLigTicket/chromedriver")
+                  "")
 driver = webdriver.Chrome(service=service)
 
 driver.get(base_url)
